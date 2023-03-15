@@ -147,6 +147,10 @@
         <el-form-item label="角色描述" prop="roleDesc">
           <el-input v-model="editForm.roleDesc"></el-input>
         </el-form-item>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editRoleInfo()">确 定</el-button>
+        </span>
       </el-form>
     </el-dialog>
 
@@ -398,6 +402,24 @@ export default {
       this.getRolesList()
 
       this.setRightsDialogVisible = false
+    },
+
+    editRoleInfo() {
+      this.$refs.editFormRef.validate(async (valid) => {
+        console.log(valid)
+        if (!valid) return
+        const { data: res } = await this.$http.put(
+          'roles/' + this.editForm.id,
+          { roleName: this.editForm.roleName, mobile: this.editForm.roleDesc }
+        )
+        if (res.meta.status != 200)
+          return this.$message.error('修改用户信息失败')
+        this.$message.success('修改用户信息成功')
+        // 隐藏添加用户的对话框
+        this.editDialogVisible = false
+        // 重新获得用户列表
+        this.getRolesList()
+      })
     },
   },
 }

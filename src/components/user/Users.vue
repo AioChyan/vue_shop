@@ -385,7 +385,7 @@ export default {
         // 隐藏添加用户的对话框
         this.editDialogVisible = false
         // 重新获得用户列表
-        this.getUserList
+        this.getUserList()
       })
     },
     // 根据id删除用户
