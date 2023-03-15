@@ -307,8 +307,8 @@ export default {
     editDialogClose() {
       this.$refs.editFormRef.resetFields()
     },
+    // 弹框 询问用户是否删除角色
     async removeRolesById(id) {
-      // 弹框 询问用户是否删除角色
       console.log(id)
       const confirmResult = await this.$confirm(
         '此操作将永久删除该角色, 是否继续?',
@@ -404,6 +404,7 @@ export default {
       this.setRightsDialogVisible = false
     },
 
+    //点击按钮，修改角色
     editRoleInfo() {
       this.$refs.editFormRef.validate(async (valid) => {
         console.log(valid)
