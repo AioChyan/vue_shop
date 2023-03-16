@@ -194,13 +194,13 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 5,
+        pagesize: 5
       },
 
       userlist: [],
@@ -215,7 +215,7 @@ export default {
         username: '',
         password: '',
         email: '',
-        mobile: '',
+        mobile: ''
       },
 
       // 添加表单的验证规则对象
@@ -226,48 +226,48 @@ export default {
             min: 3,
             max: 15,
             message: '长度在 3 到 15 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         password: [
           {
             required: true,
             message: '请输入密码',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 6,
             max: 11,
             message: '长度在 6 到 10 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         email: [
           {
             required: true,
             message: '请输入邮箱',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         mobile: [
           {
             required: true,
             message: '请输入手机号码',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 11,
             max: 11,
             message: '请输入合法的手机号码',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
 
       // 控制修改用户对话框的显示与隐藏
       editDialogVisible: false,
 
-      //查询到的用户信息对象
+      // 查询到的用户信息对象
       editForm: {},
 
       // 修改表单的验证规则对象
@@ -276,62 +276,62 @@ export default {
           {
             required: true,
             message: '请输入邮箱',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         mobile: [
           {
             required: true,
             message: '请输入手机号码',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 11,
             max: 11,
             message: '请输入合法的手机号码',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
 
-      //控制分配角色对话框的显示与隐藏
+      // 控制分配角色对话框的显示与隐藏
       setRoleDialogVisible: false,
 
-      //需要被分配角色的用户信息
+      // 需要被分配角色的用户信息
       userInfo: {},
 
       roleList: [],
 
-      selectRoleId: [],
+      selectRoleId: []
     }
   },
-  created() {
+  created () {
     this.getUserList()
   },
   methods: {
-    //获取用户列表
-    async getUserList() {
+    // 获取用户列表
+    async getUserList () {
       const { data: res } = await this.$http.get('users', {
-        params: this.queryInfo,
+        params: this.queryInfo
       })
       if (res.meta.status != 200) return this.$message.error('获取用户列表失败')
       this.userlist = res.data.users
       this.total = res.data.total
     },
     // 监听 pagesize 改变的事件
-    handleSizeChange(newSize) {
+    handleSizeChange (newSize) {
       // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getUserList()
     },
     // 监听 页码值 改变的事件
-    handleCurrentChange(newPage) {
+    handleCurrentChange (newPage) {
       console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getUserList()
     },
     // 监听 switch 开关状态的检测
-    async userStateChanged(userinfo) {
+    async userStateChanged (userinfo) {
       const { data: res } = await this.$http.put(
         `users/${userinfo.id}/state/${userinfo.mg_state}`
       )
@@ -342,11 +342,11 @@ export default {
       return this.$message.success('更新用户状态成功')
     },
     // 监听添加用户对话框的关闭事件
-    addDialogClose() {
+    addDialogClose () {
       this.$refs.addFormRef.resetFields()
     },
     // 点击按钮，添加新用户
-    addUser() {
+    addUser () {
       this.$refs.addFormRef.validate(async (valid) => {
         console.log(valid)
         if (!valid) return
@@ -360,18 +360,18 @@ export default {
       })
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status != 200) return this.$message.error('查询用户失败 ')
       this.editForm = res.data
       this.editDialogVisible = true
     },
     // 监听修改用户对话框的关闭事件
-    editDialogClose() {
+    editDialogClose () {
       this.$refs.editFormRef.resetFields()
     },
     // 点击按钮，修改用户
-    editUserInfo() {
+    editUserInfo () {
       this.$refs.editFormRef.validate(async (valid) => {
         console.log(valid)
         if (!valid) return
@@ -379,8 +379,7 @@ export default {
           'users/' + this.editForm.id,
           { email: this.editForm.email, mobile: this.editForm.mobile }
         )
-        if (res.meta.status != 200)
-          return this.$message.error('修改用户信息失败')
+        if (res.meta.status != 200) { return this.$message.error('修改用户信息失败') }
         this.$message.success('修改用户信息成功')
         // 隐藏添加用户的对话框
         this.editDialogVisible = false
@@ -389,7 +388,7 @@ export default {
       })
     },
     // 根据id删除用户
-    async removeUserById(id) {
+    async removeUserById (id) {
       // 弹框 询问用户是否删除
       console.log(id)
       const confirmResult = await this.$confirm(
@@ -398,7 +397,7 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
       ).catch((err) => err)
       if (confirmResult != 'confirm') {
@@ -410,8 +409,8 @@ export default {
       this.getUserList()
     },
 
-    //展示分配角色的对话框
-    async setRole(userInfo) {
+    // 展示分配角色的对话框
+    async setRole (userInfo) {
       this.userInfo = userInfo
 
       const { data: res } = await this.$http.get('roles')
@@ -425,7 +424,7 @@ export default {
     },
 
     // 点击按钮，分配角色
-    async saveRoleInfo() {
+    async saveRoleInfo () {
       if (!this.selectRoleId) {
         return this.$message.error('请选择要分配的角色')
       }
@@ -445,11 +444,11 @@ export default {
       this.setRoleDialogVisible = false
     },
     // 监听分配角色对话框的关闭
-    setRoleDialogVisibleClosed() {
+    setRoleDialogVisibleClosed () {
       this.selectRoleId = ''
       this.userInfo = {}
-    },
-  },
+    }
+  }
 }
 </script>
 

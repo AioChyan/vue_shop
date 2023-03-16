@@ -62,32 +62,30 @@
   </el-container>
 </template>
 
-
-
 <script>
 export default {
-  data() {
+  data () {
     return {
       menulist: [],
-      //是否折叠
+      // 是否折叠
       isCollapse: false,
       userlist: [],
-      total: 0,
+      total: 0
     }
   },
-  created() {
+  created () {
     this.getMenuList()
   },
 
   methods: {
-    //退出
-    logout() {
+    // 退出
+    logout () {
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
 
-    //获取所有菜单
-    async getMenuList() {
+    // 获取所有菜单
+    async getMenuList () {
       const { data: res } = await this.$http.get('menus')
       console.log(res)
       if (res.meta.status != 200) {
@@ -95,11 +93,11 @@ export default {
       }
       this.menulist = res.data
     },
-    //点击按钮，切换菜单的折叠与展开
-    toggleCollapse() {
+    // 点击按钮，切换菜单的折叠与展开
+    toggleCollapse () {
       this.isCollapse = !this.isCollapse
-    },
-  },
+    }
+  }
 }
 </script>
 

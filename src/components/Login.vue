@@ -40,57 +40,57 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       loginFrom: {
         // 登录表单的数据绑定对象
         username: 'admin',
-        password: '123456',
+        password: '123456'
       },
       // 表单的验证规则对象
       loginFormRules: {
-        //用户名验证
+        // 用户名验证
         username: [
           { required: true, message: '请输入用户名称', trigger: 'blur' },
           {
             min: 3,
             max: 10,
             message: '长度在 3 到 10 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
-        //密码验证
+        // 密码验证
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           {
             min: 3,
             max: 10,
             message: '长度在 3 到 10 个字符',
-            trigger: 'blur',
-          },
-        ],
-      },
+            trigger: 'blur'
+          }
+        ]
+      }
     }
   },
   methods: {
-    login() {
+    login () {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return
         const { data: res } = await this.$http.post('login', this.loginFrom)
         console.log(res)
         if (res.meta.status != 200) return this.$message.error('登录失败！')
         this.$message.success('登录成功！')
-        //将登录成功之后的token,保存到客户端的sessionStorage中
+        // 将登录成功之后的token,保存到客户端的sessionStorage中
         window.sessionStorage.setItem('token', res.data.token)
-        //通过编程式导航跳转到后台主页，路由地址为'/home'
+        // 通过编程式导航跳转到后台主页，路由地址为'/home'
         this.$router.push('/home')
       })
     },
-    resetLoginForm() {
+    resetLoginForm () {
       //   console.log(this);
       this.$refs.loginFormRef.resetFields()
-    },
-  },
+    }
+  }
 }
 </script>
 

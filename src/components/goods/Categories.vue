@@ -139,13 +139,13 @@
 
 <script>
 export default {
-  data() {
+  data () {
     // 获取分类列表的参数对象
     return {
       queryInfo: {
         type: 3,
         pagenum: 1,
-        pagesize: 5,
+        pagesize: 5
       },
 
       categorieslist: [],
@@ -155,128 +155,127 @@ export default {
       columns: [
         {
           label: '分类名称',
-          prop: 'cat_name',
+          prop: 'cat_name'
         },
         {
           label: '是否有效',
           type: 'template',
-          template: 'isok',
+          template: 'isok'
         },
         {
           label: '排序',
           type: 'template',
-          template: 'order',
+          template: 'order'
         },
         {
           label: '操作',
           type: 'template',
-          template: 'option',
-        },
+          template: 'option'
+        }
       ],
 
-      //控制添加分类对话框的显示与隐藏
+      // 控制添加分类对话框的显示与隐藏
       addCategoriesDialogVisible: false,
 
-      //添加分类的表单
+      // 添加分类的表单
       addCategoriesForm: {
         cat_name: '',
         cat_pid: 0,
-        cat_level: 0,
+        cat_level: 0
       },
-      //添加分类表单的验证规则对象
+      // 添加分类表单的验证规则对象
       addCategoriesFormRules: {
         cat_name: [
           {
             required: true,
             message: '请输入分类名称',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
 
-      //父级分类的列表参数
+      // 父级分类的列表参数
       parentCatagoriesList: [],
 
-      //指定级联选择器的配置对象
+      // 指定级联选择器的配置对象
       cascaderProps: {
         value: 'cat_id',
         label: 'cat_name',
-        children: 'children',
+        children: 'children'
       },
 
-      //选中的父级分类的id数组
+      // 选中的父级分类的id数组
       selectedKeys: [],
 
       // 控制修改分类 对话框的显示与隐藏
       editDialogVisible: false,
 
-      //查询到的分类信息的数据对象
+      // 查询到的分类信息的数据对象
       editForm: {},
 
       // 修改分类表单的验证规则对象
       editFormRules: {
         cat_name: [
-          { required: true, message: '请输入分类名', trigger: 'blur' },
-        ],
-      },
+          { required: true, message: '请输入分类名', trigger: 'blur' }
+        ]
+      }
     }
   },
-  created() {
+  created () {
     this.getCategoriesList()
   },
   methods: {
-    //获取分类列表
-    async getCategoriesList() {
+    // 获取分类列表
+    async getCategoriesList () {
       const { data: res } = await this.$http.get('categories', {
-        params: this.queryInfo,
+        params: this.queryInfo
       })
       if (res.meta.status != 200) return this.$message.error('获取分类列表失败')
       this.categorieslist = res.data.result
       this.total = res.data.total
     },
     // 监听 pagesize 改变的事件
-    handleSizeChange(newSize) {
+    handleSizeChange (newSize) {
       // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getCategoriesList()
     },
     // 监听 页码值 改变的事件
-    handleCurrentChange(newPage) {
+    handleCurrentChange (newPage) {
       console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getCategoriesList()
     },
-    //点击按钮，显示分类对话框
-    showAddCategoriesDialogVisible() {
+    // 点击按钮，显示分类对话框
+    showAddCategoriesDialogVisible () {
       this.getParentCategories()
       this.addCategoriesDialogVisible = true
     },
 
-    //获取父级分类的数据列表
-    async getParentCategories() {
+    // 获取父级分类的数据列表
+    async getParentCategories () {
       const { data: res } = await this.$http.get('categories', {
-        params: { type: 2 },
+        params: { type: 2 }
       })
       if (res.meta.status != 200) {
         return this.$message.error('获取父级列表失败！')
       }
       this.parentCatagoriesList = res.data
     },
-    //选择项发生变化触发这个函数
-    parentCatagoriesChanged() {
+    // 选择项发生变化触发这个函数
+    parentCatagoriesChanged () {
       if (this.selectedKeys.length > 0) {
         this.addCategoriesForm.cat_pid =
           this.selectedKeys[this.selectedKeys - 1]
         this.addCategoriesForm.cat_level = this.selectedKeys.length
-        return
       } else {
         this.addCategoriesForm.cat_pid = 0
         this.addCategoriesForm.cat_level = 0
       }
     },
 
-    //点击按钮，添加新的分类
-    addCategories() {
+    // 点击按钮，添加新的分类
+    addCategories () {
       this.$refs.addCategoriesFormRef.validate(async (valid) => {
         if (!valid) return
         const { data: res } = await this.$http.post(
@@ -292,26 +291,26 @@ export default {
       })
     },
     // 监听对话框的关闭事件，重置表单数据
-    addCategoriesDialogClose() {
+    addCategoriesDialogClose () {
       this.$refs.addCategoriesFormRef.resetFields()
       this.selectedKeys = ''
       this.addCategoriesForm.cat_pid = 0
       this.addCategoriesForm.cat_level = 0
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       const { data: res } = await this.$http.get('categories/' + id)
       if (res.meta.status != 200) return this.$message.error('查询分类失败 ')
       this.editForm = res.data
       this.editDialogVisible = true
     },
     // 监听修改分类对话框的关闭事件
-    editDialogClose() {
+    editDialogClose () {
       this.$refs.editFormRef.resetFields()
     },
 
-    //点击按钮，修改分类
-    editCategoriesInfo() {
+    // 点击按钮，修改分类
+    editCategoriesInfo () {
       this.$refs.editFormRef.validate(async (valid) => {
         console.log(valid)
         if (!valid) return
@@ -319,8 +318,7 @@ export default {
           'categories/' + this.editForm.cat_id,
           { cat_name: this.editForm.cat_name }
         )
-        if (res.meta.status != 200)
-          return this.$message.error('修改用户信息失败')
+        if (res.meta.status != 200) { return this.$message.error('修改用户信息失败') }
         this.$message.success('修改用户信息成功')
         // 隐藏修改分类的对话框
         this.editDialogVisible = false
@@ -330,7 +328,7 @@ export default {
     },
 
     // 删除分类
-    async removeCategoriesById(id) {
+    async removeCategoriesById (id) {
       console.log(id)
       const confirmResult = await this.$confirm(
         '此操作将永久删除该角色, 是否继续?',
@@ -338,7 +336,7 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
       ).catch((err) => err)
       if (confirmResult != 'confirm') {
@@ -348,8 +346,8 @@ export default {
       if (res.meta.status != 200) return this.$message.error('删除角色失败！')
       this.$message.success('删除角色成功')
       this.getCategoriesList()
-    },
-  },
+    }
+  }
 }
 </script>
 
